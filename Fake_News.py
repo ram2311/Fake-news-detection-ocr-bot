@@ -84,6 +84,9 @@ def reply_to_text_message(update: Update, context: CallbackContext) -> None:
 
 
 def main():
+    import os
+PORT = int(os.environ.get('PORT', 5000))
+
     """Start the bot."""
     # Create the Updater and pass it your bot's token.
     # Make sure to set use_context=True to use the new context based callbacks
@@ -102,7 +105,10 @@ def main():
     dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, reply_to_text_message))
     dispatcher.add_handler(MessageHandler(Filters.photo, read_image))
     # Start the Bot
-    updater.start_polling()
+updater.start_webhook(listen="0.0.0.0",
+                          port=int(PORT),
+                          url_path=TOKEN)
+updater.bot.setWebhook('https://fake-news-detectable-ocr-bot.herokuapp.com/' + TOKEN)
 
     # Run the bot until you press Ctrl-C or the process receives SIGINT,
     # SIGTERM or SIGABRT. This should be used most of the time, since

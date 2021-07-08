@@ -40,9 +40,9 @@ def help(update: Update, context: CallbackContext) -> None:
         s += '/'+myCommands[i]+" - "+i+"\n"
     update.message.reply_text('Help!\n' + s)
 
-
+""""
 def read_image(update: Update, context: CallbackContext) -> None:
-    """Send reply of user's message."""
+    #Send reply of user's message.
     chat_id = update.message.chat_id
     try:
         photo_file = update.message.photo[-1].get_file()
@@ -77,10 +77,29 @@ def read_image(update: Update, context: CallbackContext) -> None:
             os.remove(img_name)
         except Exception:
             pass
-
+"""
 def reply_to_text_message(update: Update, context: CallbackContext) -> None:
-    print(update.message.text)
-    update.message.reply_text(update.message.text)
+    output=update.message.text
+    if output:
+            update.message.reply_text('`'+str(output)+'`\n\nImage to Text Generated', parse_mode=ParseMode.MARKDOWN, reply_to_message_id = update.message.message_id)
+            ps = PorterStemmer()
+            test_txt = []
+            input_txt = ['Months of anti-government protests in Hong Kong began in June, when more than 1 million people marched to protest a bill that would allow the extradition of people to mainland China to stand trial. Hong Kong, a British colony until 1997, allows more autonomy to its citizens than mainland China, and protesters feared the bill could undermine this independence and endanger journalists and political activists. Though the bill was withdrawn in September, the unrest continued, including increasingly violent clashes between protesters and police.']
+            input_txt.append(output)
+            test = re.sub('[^a-zA-Z]',' ',input_txt[1])
+            test = test.lower()
+            test = test.split()
+            test = [ps.stem(word) for word in test if not word in stopwords.words('english')]
+            test = ' '.join(test)
+            test_txt.append(test)
+            X=cv.transform(test_txt).toarray()
+            Y=model.predict(X)
+            if Y==1:
+                update.message.reply_text('It is a fake news')
+            else:
+                update.message.reply_text('It is an original news')
+        else:
+            update.message.reply_text("No text found")
 
 
 def main():

@@ -102,7 +102,7 @@ def main():
     dispatcher.add_handler(MessageHandler(Filters.photo, read_image))
     # Start the Bot
     updater.start_polling()
-    updater.start_webhook(host="0.0.0.0", port=8080, debug=True)
+    #updater.start_webhook(host="0.0.0.0", port=8080, debug=True)
     #updater.bot.setWebhook('https://ocr-bot.herokuapp.com/' + TOKEN)
 
     # Run the bot until you press Ctrl-C or the process receives SIGINT,

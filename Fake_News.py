@@ -40,7 +40,7 @@ def help(update: Update, context: CallbackContext) -> None:
         s += '/'+myCommands[i]+" - "+i+"\n"
     update.message.reply_text('Help!\n' + s)
 
-""""
+
 def read_image(update: Update, context: CallbackContext) -> None:
     #Send reply of user's message.
     chat_id = update.message.chat_id
@@ -77,7 +77,7 @@ def read_image(update: Update, context: CallbackContext) -> None:
             os.remove(img_name)
         except Exception:
             pass
-"""
+
 def reply_to_text_message(update: Update, context: CallbackContext) -> None:
     output=update.message.text
     if output:

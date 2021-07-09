@@ -12,7 +12,6 @@ pickle_in = open("Countvec.pkl","rb")
 cv=pickle.load(pickle_in)
 pickle_in = open("classifierNB.pkl","rb")
 model=pickle.load(pickle_in)
-
 from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
 import numpy as np
@@ -42,7 +41,7 @@ def help(update: Update, context: CallbackContext) -> None:
 
 
 def read_image(update: Update, context: CallbackContext) -> None:
-    #Send reply of user's message.
+    """Send reply of user's message."""
     chat_id = update.message.chat_id
     try:
         photo_file = update.message.photo[-1].get_file()
@@ -79,33 +78,11 @@ def read_image(update: Update, context: CallbackContext) -> None:
             pass
 
 def reply_to_text_message(update: Update, context: CallbackContext) -> None:
-    output=update.message.text
-    if output:
-            update.message.reply_text('`'+str(output)+'`\n\nImage to Text Generated', parse_mode=ParseMode.MARKDOWN, reply_to_message_id = update.message.message_id)
-            ps = PorterStemmer()
-            test_txt = []
-            input_txt = ['Months of anti-government protests in Hong Kong began in June, when more than 1 million people marched to protest a bill that would allow the extradition of people to mainland China to stand trial. Hong Kong, a British colony until 1997, allows more autonomy to its citizens than mainland China, and protesters feared the bill could undermine this independence and endanger journalists and political activists. Though the bill was withdrawn in September, the unrest continued, including increasingly violent clashes between protesters and police.']
-            input_txt.append(output)
-            test = re.sub('[^a-zA-Z]',' ',input_txt[1])
-            test = test.lower()
-            test = test.split()
-            test = [ps.stem(word) for word in test if not word in stopwords.words('english')]
-            test = ' '.join(test)
-            test_txt.append(test)
-            X=cv.transform(test_txt).toarray()
-            Y=model.predict(X)
-            if Y==1:
-                update.message.reply_text('It is a fake news')
-            else:
-                update.message.reply_text('It is an original news')
-        else:
-            update.message.reply_text("No text found")
+    print(update.message.text)
+    update.message.reply_text(update.message.text)
 
 
 def main():
-    import os
-PORT = int(os.environ.get('PORT', 5000))
-
     """Start the bot."""
     # Create the Updater and pass it your bot's token.
     # Make sure to set use_context=True to use the new context based callbacks
@@ -124,10 +101,11 @@ PORT = int(os.environ.get('PORT', 5000))
     dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, reply_to_text_message))
     dispatcher.add_handler(MessageHandler(Filters.photo, read_image))
     # Start the Bot
-updater.start_webhook(listen="0.0.0.0",
+    updater.start_polling()
+    updater.start_webhook(listen="0.0.0.0",
                           port=int(PORT),
                           url_path=TOKEN)
-updater.bot.setWebhook('https://fake-news-detectable-ocr-bot.herokuapp.com/' + TOKEN)
+    updater.bot.setWebhook('https://Fake-News-detectable-ocr-bot.herokuapp.com/' + TOKEN)
 
     # Run the bot until you press Ctrl-C or the process receives SIGINT,
     # SIGTERM or SIGABRT. This should be used most of the time, since
